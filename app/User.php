@@ -36,4 +36,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function real_states()
+    {
+        return $this->hasMany(RealState::class);
+    }
+
 }
