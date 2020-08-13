@@ -21,6 +21,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::prefix('v1')->namespace('Api')->group(function (){
 
     Route::apiResource('real-states', 'RealStateController');
+
+    Route::name('photos.')->prefix('photos')->group(function (){
+        Route::PUT('{photo}/{real_state}', 'RealStatePhotoCOntroller@setThumb')->name('setThumb');
+
+        Route::delete('{photo}', 'RealStatePhotoCOntroller@destroy')->name('destroy');
+    });
+
     Route::apiResource('users', 'UserController');
 
     Route::apiResource('categories', 'CategoryController');

@@ -18,7 +18,10 @@ class RealStateController extends Controller
 
     public function index()
     {
-        $realStates = $this->realState->with('categories')->paginate(10);
+        $realStates = $this->realState->with(['photos' => function ($q){
+                                                                $q->whereIsThumb(true);
+                                                            }
+            , 'categories'])->paginate(10);
 
         return response()->json($realStates, 200);
     }
@@ -26,7 +29,7 @@ class RealStateController extends Controller
     public function show($id)
     {
         try{
-            $realState = $this->realState->with('categories')->findOrFail($id);
+            $realState = $this->realState->with(['photos', 'categories'])->findOrFail($id);
 
             return response()->json([
                 'data' => $realState
@@ -41,6 +44,7 @@ class RealStateController extends Controller
     public function store(RealStateRequest $request)
     {
         $data = $request->all();
+        $images = $request->file('images');
 
         try{
 
@@ -48,6 +52,18 @@ class RealStateController extends Controller
 
             if (!empty($data['categories']))
                 $realState->categories()->sync($data['categories']);
+
+            if ($images) {
+                $imagesUploaded = [];
+                foreach ($images as $image) {
+                    $path = $image->store('images', 'public');
+                    $imagesUploaded[] = [
+                        'photo'     => $path,
+                        'is_thumb'  => false
+                    ];
+                }
+                $realState->photos()->createMany($imagesUploaded);
+            }
 
             return response()->json([
                 'data' => [
@@ -64,6 +80,7 @@ class RealStateController extends Controller
     public function update($id, RealStateRequest $request)
     {
         $data = $request->all();
+        $images = $request->file('images');
 
         try{
 
@@ -72,6 +89,18 @@ class RealStateController extends Controller
 
             if (!empty($data['categories']))
                 $realState->categories()->sync($data['categories']);
+
+            if ($images) {
+                $imagesUploaded = [];
+                foreach ($images as $image) {
+                    $path = $image->store('images', 'public');
+                    $imagesUploaded[] = [
+                        'photo'     => $path,
+                        'is_thumb'  => false
+                    ];
+                }
+                $realState->photos()->createMany($imagesUploaded);
+            }
 
             return response()->json([
                 'data' => [
