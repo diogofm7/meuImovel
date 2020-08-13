@@ -27,7 +27,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = $this->user->paginate(10);
+        $users = $this->user->with('profile')->paginate(10);
 
         return response()->json($users, 200);
     }
@@ -48,9 +48,11 @@ class UserController extends Controller
         }
 
         try{
+            $profile = $data['profile'];
 
             $data['password'] = bcrypt($data['password']);
             $user = $this->user->create($data);
+            $user->profile()->create($profile);
 
             return response()->json([
                 'data' => [
@@ -73,7 +75,7 @@ class UserController extends Controller
     public function show($id)
     {
         try{
-            $user = $this->user->findOrFail($id);
+            $user = $this->user->with('profile')->findOrFail($id);
 
             return response()->json([
                 'data' => $user
@@ -103,9 +105,11 @@ class UserController extends Controller
         }
 
         try{
+            $profile = $data['profile'];
 
             $user = $this->user->findOrFail($id);
             $user->update($data);
+            $user->profile->update($profile);
 
             return response()->json([
                 'data' => [

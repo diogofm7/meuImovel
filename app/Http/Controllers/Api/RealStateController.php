@@ -18,7 +18,7 @@ class RealStateController extends Controller
 
     public function index()
     {
-        $realStates = $this->realState->with(['categories'])->paginate(10);
+        $realStates = $this->realState->with('categories')->paginate(10);
 
         return response()->json($realStates, 200);
     }
@@ -26,7 +26,7 @@ class RealStateController extends Controller
     public function show($id)
     {
         try{
-            $realState = $this->realState->with(['categories'])->findOrFail($id);
+            $realState = $this->realState->with('categories')->findOrFail($id);
 
             return response()->json([
                 'data' => $realState
@@ -46,7 +46,7 @@ class RealStateController extends Controller
 
             $realState = $this->realState->create($data);
 
-            if (isset($data['categories']) && count($data['categories']))
+            if (!empty($data['categories']))
                 $realState->categories()->sync($data['categories']);
 
             return response()->json([
@@ -70,7 +70,7 @@ class RealStateController extends Controller
             $realState = $this->realState->findOrFail($id);
             $realState->update($data);
 
-            if (isset($data['categories']) && count($data['categories']))
+            if (!empty($data['categories']))
                 $realState->categories()->sync($data['categories']);
 
             return response()->json([

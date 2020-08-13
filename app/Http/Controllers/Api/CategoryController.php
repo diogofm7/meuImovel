@@ -27,7 +27,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = $this->category->paginate(10);
+        $categories = $this->category->with('realStates')->paginate(10);
 
         return response()->json($categories, 200);
     }
@@ -67,7 +67,7 @@ class CategoryController extends Controller
     public function show($id)
     {
         try{
-            $category = $this->category->findOrFail($id);
+            $category = $this->category->with('realStates')->findOrFail($id);
 
             return response()->json([
                 'data' => $category

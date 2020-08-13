@@ -24,9 +24,12 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'      => 'required|string|max:255',
-            'email'     => 'required|string|email|max:255|unique:users',
-            'password'  => 'string|min:8'
+            'name'                      => 'required|string|max:255',
+            'email'                     => 'required|string|email|max:255|unique:users,email,'.$this->route('user').',id',
+            'password'                  => 'string|min:8',
+            'profile.phone'             =>  'required',
+            'profile.mobile_phone'      => 'required',
+            'profile.social_networks.*' => 'string'
         ];
     }
 }
