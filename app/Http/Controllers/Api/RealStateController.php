@@ -18,10 +18,11 @@ class RealStateController extends Controller
 
     public function index()
     {
-        $realStates = $this->realState->with(['photos' => function ($q){
-                                                                $q->whereIsThumb(true);
-                                                            }
-            , 'categories'])->paginate(10);
+        $user = auth('api')->user();
+        $realStates = $user->realStates()->with(['photos' => function ($q){
+                                                $q->whereIsThumb(true);
+                                             }
+                                            , 'categories'])->paginate(10);
 
         return response()->json($realStates, 200);
     }
@@ -29,7 +30,8 @@ class RealStateController extends Controller
     public function show($id)
     {
         try{
-            $realState = $this->realState->with(['photos', 'categories'])->findOrFail($id);
+            $user = auth('api')->user();
+            $realState = $user->realStates()->with(['photos', 'categories'])->findOrFail($id);
 
             return response()->json([
                 'data' => $realState
@@ -48,7 +50,8 @@ class RealStateController extends Controller
 
         try{
 
-            $realState = $this->realState->create($data);
+            $user = auth('api')->user();
+            $realState = $user->realStates()->create($data);
 
             if (!empty($data['categories']))
                 $realState->categories()->sync($data['categories']);
@@ -84,7 +87,8 @@ class RealStateController extends Controller
 
         try{
 
-            $realState = $this->realState->findOrFail($id);
+            $user = auth('api')->user();
+            $realState = $user->realStates()->findOrFail($id);
             $realState->update($data);
 
             if (!empty($data['categories']))
@@ -118,7 +122,9 @@ class RealStateController extends Controller
     {
         try{
 
-            $realState = $this->realState->findOrFail($id);
+            $user = auth('api')->user();
+            $realState = $user->realStates()->findOrFail($id);
+            $realState->categories()->detach();
             $realState->delete();
 
             return response()->json([

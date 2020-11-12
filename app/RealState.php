@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class RealState extends Model
 {
     protected $fillable = [
-        'user_id', 'title', 'description', 'content',
+        'title', 'description', 'content',
         'price', 'slug', 'bathrooms', 'bedrooms',
         'property_area', 'total_property_area'
     ];
