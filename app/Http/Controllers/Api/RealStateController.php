@@ -31,7 +31,9 @@ class RealStateController extends Controller
     {
         try{
             $user = auth('api')->user();
-            $realState = $user->realStates()->with(['photos', 'categories'])->findOrFail($id);
+            $realState = $user->realStates()->with(['photos', 'categories'])
+                                            ->findOrFail($id)
+                                            ->makeHidden('thumb');
 
             return response()->json([
                 'data' => $realState

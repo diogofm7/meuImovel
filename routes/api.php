@@ -30,7 +30,7 @@ Route::prefix('v1')->namespace('Api')->group(function (){
     Route::group([
         'middleware' => ['jwt.auth']
     ], function (){
-        Route::apiResource('real-states', 'RealStateController');
+        Route::apiResource('/real-states', 'RealStateController');
 
         Route::name('photos.')->prefix('photos')->group(function (){
             Route::PUT('{photo}/{real_state}', 'RealStatePhotoCOntroller@setThumb')->name('setThumb');

@@ -39,7 +39,7 @@ class RealStateSearchController extends Controller
     public function show($id)
     {
         try {
-            $realState = $this->realState->with(['address', 'photos',])->findOrFail($id);
+            $realState = $this->realState->with(['address', 'photos',])->findOrFail($id)->makeHidden('thumb');
 
             return response()->json([
                 'data' => $realState
