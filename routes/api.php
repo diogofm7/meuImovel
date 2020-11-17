@@ -24,6 +24,9 @@ Route::prefix('v1')->namespace('Api')->group(function (){
     Route::post('/refresh', 'Auth\LoginJwtController@refresh')->name('refresh');
     Route::delete('/logout', 'Auth\LoginJwtController@logout')->name('logout');
 
+    Route::get('/search', 'RealStateSearchController@index')->name('search');
+    Route::get('/search/{real_state_id}', 'RealStateSearchController@show')->name('search.show');
+
     Route::group([
         'middleware' => ['jwt.auth']
     ], function (){
